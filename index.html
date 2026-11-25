@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pago de matrícula · Fundación Néstor Sanín Cano</title>
+  <style>
+    :root {
+      --marca: #185FA5;
+      --marca-claro: #E6F1FB;
+      --texto: #1f1f1f;
+      --texto-sec: #5f5e5a;
+      --borde: #e4e2da;
+      --fondo: #f4f3ef;
+      --ok: #3B6D11;
+      --ok-bg: #EAF3DE;
+      --aviso: #854F0B;
+      --aviso-bg: #FAEEDA;
+      --error: #A32D2D;
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--fondo); color: var(--texto);
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    main { max-width: 420px; margin: 0 auto; padding: 24px 16px; }
+    .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; }
+    .encabezado { background: var(--marca); color: #fff; padding: 18px 20px;
+                  display: flex; align-items: center; gap: 12px; }
+    .logo { font-size: 28px; font-weight: 600; font-style: italic; letter-spacing: 1px;
+            border-bottom: 2px solid #85B7EB; line-height: 1.1; }
+    .fundacion { font-size: 13px; line-height: 1.4; color: var(--marca-claro); }
+    .cuerpo { padding: 22px 20px; }
+    h1 { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+    .sub { font-size: 14px; color: var(--texto-sec); margin: 0 0 18px; line-height: 1.6; }
+    label { font-size: 14px; color: var(--texto-sec); }
+    input[type=text] { width: 100%; height: 44px; margin-top: 6px; padding: 0 12px;
+                       font: 15px ui-monospace, monospace; text-transform: uppercase;
+                       border: 1px solid var(--borde); border-radius: 8px; }
+    input[type=file] { width: 100%; font-size: 14px; }
+    .boton { width: 100%; height: 46px; margin-top: 12px; border: none; border-radius: 8px;
+             background: var(--marca); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .boton:disabled { opacity: .6; cursor: wait; }
+    .secundario { width: 100%; height: 42px; margin-top: 10px; background: #fff; color: var(--texto);
+                  border: 1px solid var(--borde); border-radius: 8px; font-size: 14px; cursor: pointer; }
+    .error { color: var(--error); font-size: 14px; min-height: 20px; margin: 8px 0 0; }
+    .fila { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+            padding: 8px 0; border-bottom: 1px solid var(--borde); font-size: 14px; }
+    .fila > span:first-child { color: var(--texto-sec); white-space: nowrap; }
+    .fila > span:last-child { text-align: right; }
+    .saldo { background: var(--fondo); border-radius: 8px; padding: 16px; margin: 16px 0; text-align: center; }
+    .saldo p { margin: 0; font-size: 13px; color: var(--texto-sec); }
+    .saldo strong { display: block; font-size: 28px; margin-top: 4px; }
+    .mono { font-family: ui-monospace, monospace; font-size: 13px; }
+    .caja { border: 1px solid var(--borde); border-radius: 8px; padding: 4px 12px; margin-top: 12px; }
+    .caja .fila:last-child { border-bottom: none; }
+    .copiar { border: 1px solid var(--borde); background: #fff; border-radius: 6px;
+              font-size: 12px; padding: 4px 8px; margin-left: 6px; cursor: pointer; }
+    .nota { font-size: 12px; color: var(--texto-sec); line-height: 1.5; margin: 8px 0 0; }
+    .centro { text-align: center; }
+    .icono { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px;
+             display: flex; align-items: center; justify-content: center; font-size: 26px; }
+    .pie { font-size: 12px; color: var(--texto-sec); text-align: center; margin-top: 16px; line-height: 1.5; }
+  </style>
+</head>
+<body>
+<main>
+  <div class="tarjeta">
+    <header class="encabezado">
+      <div class="logo">NESA</div>
+      <div class="fundacion">Fundación<br>Néstor Sanín Cano</div>
+    </header>
+
+    <div class="cuerpo">
+      <!-- Vista 1: consulta -->
+      <section id="vista-consulta">
+        <h1>Pago de matrícula</h1>
+        <p class="sub">Escribe la referencia de pago que te entregó la fundación para ver tu saldo.</p>
+        <form id="form-consulta" novalidate>
+          <label for="referencia">Referencia de pago</label>
+          <input id="referencia" type="text" placeholder="NESA-1234567890-PR345154"
+                 autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <p id="error-consulta" class="error" role="alert"></p>
+          <button id="btn-consultar" class="boton" type="submit">Consultar</button>
+        </form>
+      </section>
+
+      <!-- Vista 2: datos y pago -->
+      <section id="vista-pago" hidden>
+        <p class="sub" style="margin:0">Hola,</p>
+        <h1 data-campo="nombre"></h1>
+        <div class="fila"><span>Documento</span><span>CC <span data-campo="cc"></span></span></div>
+        <div class="fila"><span>Programa</span><span data-campo="programa"></span></div>
+        <div class="fila"><span>Periodo</span><span data-campo="periodo"></span></div>
+        <div class="fila"><span>Concepto</span><span data-campo="concepto"></span></div>
+        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
+
+        <div class="saldo">
+          <p>Saldo pendiente</p>
+          <strong data-campo="saldo"></strong>
+        </div>
+
+        <button id="btn-ver-cuenta" class="secundario" type="button">Ver datos para transferir</button>
+        <div id="datos-cuenta" hidden>
+          <div class="caja">
+            <div class="fila"><span>Banco</span><span>Bancolombia</span></div>
+            <div class="fila"><span>Cuenta de ahorros</span>
+              <span><span class="mono">556-559913-43</span><button class="copiar" type="button" data-copiar="55655991343">Copiar</button></span>
+            </div>
+            <div class="fila"><span>Referencia</span>
+              <span><button class="copiar" type="button" data-copiar="referencia">Copiar</button></span>
+            </div>
+          </div>
+          <p class="nota">Escribe la referencia en la descripción de la transferencia.</p>
+          <p class="nota">Al inscribir la cuenta, tu banco mostrará las iniciales A. M. M., correspondientes al recaudo de la fundación.</p>
+        </div>
+
+        <button id="btn-ya-pague" class="boton" type="button">Ya pagué</button>
+        <p class="pie">Transfiere el valor exacto en un solo pago.</p>
+      </section>
+
+      <!-- Vista 3: comprobante -->
+      <section id="vista-comprobante" hidden>
+        <h1>Sube tu comprobante</h1>
+        <p class="sub">Adjunta la imagen o el PDF de tu transferencia por <span data-campo="saldo"></span>
+          con la referencia <span class="mono" data-campo="referencia"></span>.</p>
+        <input id="archivo" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
+        <p id="error-comprobante" class="error" role="alert"></p>
+        <button id="btn-enviar" class="boton" type="button">Enviar comprobante</button>
+        <button id="btn-volver" class="secundario" type="button">Volver a los datos de pago</button>
+      </section>
+
+      <!-- Vista 4: en verificación -->
+      <section id="vista-verificacion" hidden>
+        <div class="centro">
+          <div class="icono" style="background:var(--aviso-bg);color:var(--aviso)">◷</div>
+          <h1 id="titulo-verificacion">Recibimos tu comprobante</h1>
+          <p class="sub">Gracias, <span data-campo="primerNombre"></span>. Estamos verificando tu transferencia.
+            Una vez la confirmemos, el pago quedará aplicado a tu matrícula.</p>
+        </div>
+        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
+        <div class="fila"><span>Valor reportado</span><span data-campo="saldo"></span></div>
+        <div class="fila"><span>Comprobante enviado</span><span data-campo="fechaComprobante"></span></div>
+        <div class="fila"><span>Estado</span><span style="color:var(--aviso)">En verificación</span></div>
+        <p class="pie">La verificación toma hasta un día hábil. Puedes consultar el estado con tu referencia
+          en esta misma página. No es necesario que vuelvas a transferir.</p>
+      </section>
+
+      <!-- Vista 5: aprobado -->
+      <section id="vista-aprobado" hidden>
+        <div class="centro">
+          <div class="icono" style="background:var(--ok-bg);color:var(--ok)">✓</div>
+          <h1>Pago aprobado</h1>
+          <p class="sub">Tu saldo de matrícula del periodo <span data-campo="periodo"></span> quedó al día.</p>
+        </div>
+        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
+        <div class="fila"><span>Valor pagado</span><span data-campo="saldo"></span></div>
+        <div class="fila"><span>Aprobado</span><span data-campo="fechaAprobacion"></span></div>
+        <p class="pie">Fundación Néstor Sanín Cano</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ── Configuración ──────────────────────────────────────
+  const CONFIG = {
+    API_URL: 'https://script.google.com/macros/s/AKfycbzp3az2P-xvsYSRBcBBAMu9d5ak_0pTSug7JP76QQUO3QehtpFhWwukl8XzJOOK1Uryhg/exec',
+    PATRON: /^NESA-\d{6,10}-PR345154$/,
+    TAMANO_MAX: 5 * 1024 * 1024,
+    TIPOS: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+  };
+
+  // Traducción de los códigos del backend a mensajes para el estudiante.
+  const MENSAJES = {
+    VACIA: 'Escribe tu referencia de pago.',
+    FORMATO: 'Revisa el formato: NESA-documento-PR345154.',
+    NO_ENCONTRADA: 'No encontramos esa referencia. Revísala e intenta de nuevo.',
+    BLOQUEADO: 'Hay muchas consultas en este momento. Intenta de nuevo en unos minutos.',
+    SIN_ARCHIVO: 'Adjunta tu comprobante antes de enviarlo.',
+    TIPO_NO_PERMITIDO: 'El comprobante debe ser una imagen (JPG, PNG o WEBP) o un PDF.',
+    ARCHIVO_GRANDE: 'El archivo supera 5 MB. Envía una imagen más liviana.',
+    INTERNO: 'No pudimos completar la solicitud. Intenta de nuevo en unos minutos.',
+    RED: 'No hay conexión. Revisa tu internet e intenta de nuevo.'
+  };
+
+  const formatoPesos = new Intl.NumberFormat('es-CO', {
+    style: 'currency', currency: 'COP', maximumFractionDigits: 0
+  });
+  const formatoFecha = new Intl.DateTimeFormat('es-CO', {
+    dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Bogota'
+  });
+
+  let estudiante = null;
+  const $ = (id) => document.getElementById(id);
+
+  // ── Vistas ─────────────────────────────────────────────
+  function mostrarVista(id) {
+    document.querySelectorAll('section[id^="vista-"]').forEach((seccion) => {
+      seccion.hidden = seccion.id !== id;
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function fechaLegible(iso) {
+    return iso ? formatoFecha.format(new Date(iso)) : '';
+  }
+
+  // Llena cada elemento con data-campo usando textContent (evita XSS).
+  function pintar(datos) {
+    const valores = {
+      nombre: datos.nombre,
+      primerNombre: String(datos.nombre).split(' ')[0],
+      cc: Number(datos.cc).toLocaleString('es-CO'),
+      programa: datos.programa,
+      periodo: datos.periodo,
+      concepto: datos.concepto,
+      referencia: datos.referencia,
+      saldo: `${formatoPesos.format(datos.saldo)} COP`,
+      fechaComprobante: fechaLegible(datos.fechaComprobante),
+      fechaAprobacion: fechaLegible(datos.fechaAprobacion)
+    };
+    document.querySelectorAll('[data-campo]').forEach((elemento) => {
+      elemento.textContent = valores[elemento.dataset.campo] ?? '';
+    });
+  }
+
+  function mostrarSegunEstado(recienEnviado = false) {
+    pintar(estudiante);
+    if (estudiante.estado === 'Pagado') {
+      mostrarVista('vista-aprobado');
+    } else if (estudiante.estado === 'En verificación') {
+      $('titulo-verificacion').textContent = recienEnviado
+        ? 'Recibimos tu comprobante'
+        : 'Tu pago está en verificación';
+      mostrarVista('vista-verificacion');
+    } else {
+      mostrarVista('vista-pago');
+    }
+  }
+
+  function ocupado(boton, ocupadoAhora, textoOcupado, textoNormal) {
+    boton.disabled = ocupadoAhora;
+    boton.textContent = ocupadoAhora ? textoOcupado : textoNormal;
+  }
+
+  // ── Consulta ───────────────────────────────────────────
+  async function consultar(evento) {
+    evento.preventDefault();
+    const error = $('error-consulta');
+    const ref = $('referencia').value.trim().toUpperCase();
+    error.textContent = '';
+
+    if (!ref) { error.textContent = MENSAJES.VACIA; return; }
+    if (!CONFIG.PATRON.test(ref)) { error.textContent = MENSAJES.FORMATO; return; }
+
+    const boton = $('btn-consultar');
+    ocupado(boton, true, 'Consultando…', 'Consultar');
+    try {
+      const respuesta = await fetch(`${CONFIG.API_URL}?ref=${encodeURIComponent(ref)}`);
+      const datos = await respuesta.json();
+      if (!datos.ok) {
+        error.textContent = MENSAJES[datos.error] || MENSAJES.INTERNO;
+        return;
+      }
+      estudiante = datos.estudiante;
+      mostrarSegunEstado();
+    } catch (err) {
+      error.textContent = MENSAJES.RED;
+    } finally {
+      ocupado(boton, false, 'Consultando…', 'Consultar');
+    }
+  }
+
+  // ── Comprobante ────────────────────────────────────────
+  function leerBase64(archivo) {
+    return new Promise((resolver, rechazar) => {
+      const lector = new FileReader();
+      lector.onload = () => resolver(String(lector.result).split(',')[1]); // quita "data:...;base64,"
+      lector.onerror = () => rechazar(lector.error);
+      lector.readAsDataURL(archivo);
+    });
+  }
+
+  async function enviarComprobante() {
+    const archivo = $('archivo').files[0];
+    const error = $('error-comprobante');
+    error.textContent = '';
+
+    if (!archivo) { error.textContent = MENSAJES.SIN_ARCHIVO; return; }
+    if (!CONFIG.TIPOS.includes(archivo.type)) { error.textContent = MENSAJES.TIPO_NO_PERMITIDO; return; }
+    if (archivo.size > CONFIG.TAMANO_MAX) { error.textContent = MENSAJES.ARCHIVO_GRANDE; return; }
+
+    const boton = $('btn-enviar');
+    ocupado(boton, true, 'Enviando…', 'Enviar comprobante');
+    try {
+      const base64 = await leerBase64(archivo);
+      const respuesta = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita el preflight de CORS
+        body: JSON.stringify({ ref: estudiante.referencia, mimeType: archivo.type, base64 })
+      });
+      const datos = await respuesta.json();
+      if (datos.ok || datos.error === 'YA_REPORTADO') {
+        estudiante = datos.estudiante;
+        mostrarSegunEstado(datos.ok);
+        return;
+      }
+      error.textContent = MENSAJES[datos.error] || MENSAJES.INTERNO;
+    } catch (err) {
+      error.textContent = MENSAJES.RED;
+    } finally {
+      ocupado(boton, false, 'Enviando…', 'Enviar comprobante');
+    }
+  }
+
+  // ── Copiar al portapapeles ─────────────────────────────
+  async function copiar(boton) {
+    const valor = boton.dataset.copiar === 'referencia' ? estudiante.referencia : boton.dataset.copiar;
+    try {
+      await navigator.clipboard.writeText(valor);
+      boton.textContent = 'Copiado';
+    } catch (err) {
+      boton.textContent = 'No se pudo copiar';
+    }
+    setTimeout(() => { boton.textContent = 'Copiar'; }, 1500);
+  }
+
+  // ── Eventos ────────────────────────────────────────────
+  $('form-consulta').addEventListener('submit', consultar);
+  $('referencia').addEventListener('input', () => { $('error-consulta').textContent = ''; });
+  $('btn-ver-cuenta').addEventListener('click', () => {
+    const caja = $('datos-cuenta');
+    caja.hidden = !caja.hidden;
+    $('btn-ver-cuenta').textContent = caja.hidden ? 'Ver datos para transferir' : 'Ocultar datos para transferir';
+  });
+  $('btn-ya-pague').addEventListener('click', () => mostrarVista('vista-comprobante'));
+  $('btn-volver').addEventListener('click', () => mostrarVista('vista-pago'));
+  $('btn-enviar').addEventListener('click', enviarComprobante);
+  $('archivo').addEventListener('change', () => { $('error-comprobante').textContent = ''; });
+  document.addEventListener('click', (evento) => {
+    if (evento.target.classList.contains('copiar')) copiar(evento.target);
+  });
+</script>
+</body>
+</html>
