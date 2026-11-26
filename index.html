@@ -254,7 +254,8 @@
 
     <fieldset class="tarifas">
       <legend><h2>¿Cómo quieres pagar?</h2></legend>
-      <p class="ayuda">Elige una opción para ver los pasos.</p>
+      <p id="ayuda-metodos" class="ayuda">Elige una opción para ver los pasos.</p>
+      <p id="error-ayuda" class="error" role="alert"></p>
 
       <label id="tarifa-wompi" class="tarifa">
         <input type="radio" name="metodo" value="wompi">
@@ -373,11 +374,12 @@
   </section>
 </main>
 
-<footer class="pie-pagina">Fundación Néstor Sanín Cano. copyright Todos los derechos reservados.</footer>
+<footer class="pie-pagina">Fundación Néstor Sanín Cano. Si tienes dudas sobre tu saldo, escríbenos por nuestros canales oficiales.</footer>
 
 <script>
   // ── Configuración ──────────────────────────────────────
   const CONFIG = {
+    TRANSFERENCIA_ACTIVA: false,   // ← interruptor: true = muestra la opción de transferencia
     API_URL: 'https://script.google.com/macros/s/AKfycbzp3az2P-xvsYSRBcBBAMu9d5ak_0pTSug7JP76QQUO3QehtpFhWwukl8XzJOOK1Uryhg/exec',
     PATRON: /^NESA-\d{6,10}-PR345154$/,
     TAMANO_MAX: 5 * 1024 * 1024,
@@ -397,9 +399,9 @@
     ARCHIVO_GRANDE: 'El archivo supera 5 MB. Envía una imagen más liviana.',
     INTERNO: 'No pudimos completar la solicitud. Intenta de nuevo en unos minutos.',
     RED: 'No hay conexión. Revisa tu internet e intenta de nuevo.',
-    RECHAZADA: 'Tu banco o entidad no aprobó el pago. Puedes intentarlo de nuevo o pagar por transferencia.',
+    RECHAZADA: 'Tu banco o entidad no aprobó el pago. Puedes intentarlo de nuevo con otro medio de pago.',
     SIN_WIDGET: 'No se cargó el módulo de pago en línea. Recarga la página e intenta de nuevo.',
-    NO_DISPONIBLE: 'El pago en línea no está disponible en este momento. Puedes pagar por transferencia.'
+    NO_DISPONIBLE: 'El pago en línea no está disponible en este momento. Intenta más tarde o comunícate con la fundación.'
   };
 
   const formatoNumero = new Intl.NumberFormat('es-CO', {
@@ -465,6 +467,7 @@
   function reiniciarMetodos() {
     document.querySelectorAll('input[name="metodo"]').forEach((opcion) => { opcion.checked = false; });
     $('error-wompi').textContent = '';
+    $('error-ayuda').textContent = '';
   }
 
   function mostrarSegunEstado(recienEnviado = false) {
@@ -481,6 +484,12 @@
     } else {
       reiniciarMetodos();
       $('tarifa-wompi').hidden = !estudiante.wompi;
+      $('tarifa-transferencia').hidden = !CONFIG.TRANSFERENCIA_ACTIVA;
+      $('ayuda-metodos').hidden = !CONFIG.TRANSFERENCIA_ACTIVA;
+      if (!CONFIG.TRANSFERENCIA_ACTIVA) {
+        $('tarifa-wompi').querySelector('input').checked = true; // única opción: se abre sola
+        if (!estudiante.wompi) $('error-ayuda').textContent = MENSAJES.NO_DISPONIBLE;
+      }
       mostrarVista('vista-pago');
     }
   }
