@@ -4,252 +4,376 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#185FA5">
-  <title>Pago de matrícula · Fundación Néstor Sanín Cano</title>
+  <meta name="theme-color" content="#0E3A66">
+  <title>Pago de matrícula | Fundación Néstor Sanín Cano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --marca: #185FA5;
-      --marca-oscuro: #124A82;
-      --marca-claro: #E6F1FB;
-      --texto: #1f1f1f;
-      --texto-sec: #5f5e5a;
-      --borde: #e4e2da;
-      --fondo: #f4f3ef;
-      --ok: #3B6D11;
-      --ok-bg: #EAF3DE;
-      --aviso: #854F0B;
-      --aviso-bg: #FAEEDA;
-      --error: #A32D2D;
+      --tinta: #0F2742;        /* texto principal, azul tinta */
+      --gris: #5B6B7F;         /* texto secundario */
+      --marca: #185FA5;        /* azul institucional NESA */
+      --marca-hondo: #0E3A66;  /* banda superior y botones en hover */
+      --cielo: #E9F0F7;        /* fondo de la página */
+      --niebla: #C9D6E4;       /* líneas y bordes */
+      --papel: #FFFFFF;
+      --ok: #2E6B3B;
+      --ok-suave: #E3F0E5;
+      --ambar: #8F5600;
+      --ambar-suave: #FBEFD9;
+      --error: #B3261E;
+
+      --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+      --texto: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif;
+      --sombra-pase: 0 1px 0 rgba(15, 39, 66, .06), 0 18px 32px -18px rgba(15, 39, 66, .35);
     }
+
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
-    body { margin: 0; background: var(--fondo); color: var(--texto);
-           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-           -webkit-font-smoothing: antialiased; }
-    main { max-width: 440px; margin: 0 auto; padding: 24px 16px 32px; }
-    .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 16px; overflow: hidden;
-               box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04); }
-    .encabezado { background: var(--marca); color: #fff; padding: 18px 20px;
-                  display: flex; align-items: center; gap: 12px; }
-    .logo { font-size: 28px; font-weight: 600; font-style: italic; letter-spacing: 1px;
-            border-bottom: 2px solid #85B7EB; line-height: 1.1; }
-    .fundacion { font-size: 13px; line-height: 1.4; color: var(--marca-claro); }
-    .cuerpo { padding: 22px 20px; }
-    h1 { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
-    h2 { font-size: 15px; font-weight: 600; margin: 22px 0 2px; }
-    h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
-    .sub { font-size: 14px; color: var(--texto-sec); margin: 0 0 18px; line-height: 1.6; }
-    label { font-size: 14px; color: var(--texto-sec); }
-    input[type=text] { width: 100%; height: 44px; margin-top: 6px; padding: 0 12px;
-                       font: 15px ui-monospace, monospace; text-transform: uppercase;
-                       border: 1px solid var(--borde); border-radius: 8px; }
-    input[type=text]:focus { outline: 2px solid var(--marca-claro); border-color: var(--marca); }
-    input[type=file] { width: 100%; font-size: 14px; }
-    .boton { width: 100%; height: 48px; margin-top: 12px; border: none; border-radius: 10px;
-             background: var(--marca); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
-             transition: background .15s; }
-    .boton:hover:not(:disabled) { background: var(--marca-oscuro); }
-    .boton:disabled { opacity: .6; cursor: wait; }
-    .secundario { width: 100%; height: 42px; margin-top: 10px; background: #fff; color: var(--texto);
-                  border: 1px solid var(--borde); border-radius: 10px; font-size: 14px; cursor: pointer; }
-    .secundario:hover { background: var(--fondo); }
-    .error { color: var(--error); font-size: 14px; min-height: 20px; margin: 8px 0 0; line-height: 1.5; }
-    .error:empty { min-height: 0; margin: 0; }
-    .fila { display: flex; justify-content: space-between; align-items: center; gap: 12px;
-            padding: 8px 0; border-bottom: 1px solid var(--borde); font-size: 14px; }
-    .fila > span:first-child { color: var(--texto-sec); white-space: nowrap; }
-    .fila > span:last-child { text-align: right; }
-    .fila.total > span { color: var(--texto); font-weight: 600; font-size: 15px; }
-    .saldo { background: var(--fondo); border-radius: 10px; padding: 16px; margin: 16px 0 0; text-align: center; }
-    .saldo p { margin: 0; font-size: 13px; color: var(--texto-sec); }
-    .saldo strong { display: block; font-size: 28px; margin-top: 4px; }
-    .mono { font-family: ui-monospace, monospace; font-size: 13px; }
-    .caja { border: 1px solid var(--borde); border-radius: 8px; padding: 4px 12px; margin-top: 12px; }
-    .caja .fila:last-child { border-bottom: none; }
-    .copiar { border: 1px solid var(--borde); background: #fff; border-radius: 6px;
-              font-size: 12px; padding: 4px 8px; margin-left: 6px; cursor: pointer; }
-    .nota { font-size: 12px; color: var(--texto-sec); line-height: 1.5; margin: 8px 0 0; }
-    .centro { text-align: center; }
-    .icono { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px;
-             display: flex; align-items: center; justify-content: center; font-size: 26px; }
-    .pie { font-size: 12px; color: var(--texto-sec); text-align: center; margin-top: 16px; line-height: 1.5; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+           background: var(--cielo); color: var(--tinta);
+           font: 400 16px/1.55 var(--texto); -webkit-font-smoothing: antialiased; }
+    button, input { font: inherit; color: inherit; }
+    :focus-visible { outline: 3px solid #7FB2E5; outline-offset: 2px; }
 
-    /* Opciones de pago */
-    .opcion { border: 1px solid var(--borde); border-radius: 12px; padding: 16px; margin-top: 12px; }
-    .opcion-destacada { border: 1.5px solid var(--marca);
-                        box-shadow: 0 6px 18px rgba(24,95,165,.10); }
-    .opcion-cabeza { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-    .opcion-cabeza p { margin: 0; font-size: 13px; color: var(--texto-sec); line-height: 1.5; }
-    .insignia { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px;
-                background: var(--marca-claro); color: var(--marca); white-space: nowrap; }
-    .insignia.neutra { background: var(--fondo); color: var(--texto-sec); }
-    .desglose { margin-top: 12px; }
-    .desglose .fila:last-child { border-bottom: none; }
-    .metodos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .metodos span { font-size: 11px; color: var(--texto-sec); border: 1px solid var(--borde);
-                    border-radius: 6px; padding: 3px 7px; }
-    .seguro { display: flex; align-items: center; justify-content: center; gap: 6px;
-              font-size: 12px; color: var(--texto-sec); margin: 10px 0 0; }
-    .seguro svg { flex: none; }
+    /* ── Banda institucional ───────────────────────── */
+    .banda { background: var(--marca-hondo); color: #fff; }
+    .banda-interior { max-width: 460px; margin: 0 auto; padding: 18px 20px 20px;
+                      display: flex; align-items: center; gap: 14px; }
+    .marca { font: italic 700 34px/1 var(--display); letter-spacing: .01em;
+             padding-bottom: 3px; border-bottom: 3px solid #7FB2E5; }
+    .fundacion { font-size: 13px; line-height: 1.35; color: #CFE0F2; }
 
-    /* Procesando */
-    .spinner { width: 48px; height: 48px; border-radius: 50%; margin: 8px auto 16px;
-               border: 4px solid var(--marca-claro); border-top-color: var(--marca);
-               animation: girar .9s linear infinite; }
+    main { flex: 1; width: 100%; max-width: 460px; margin: 0 auto; padding: 28px 20px 24px; }
+    .pie-pagina { max-width: 460px; margin: 0 auto; padding: 0 20px 28px;
+                  font-size: 12.5px; color: var(--gris); text-align: center; }
+
+    /* ── Tipografía ────────────────────────────────── */
+    h1 { font: 600 34px/1.05 var(--display); letter-spacing: .005em; margin: 0 0 10px; }
+    h2 { font: 600 24px/1.1 var(--display); margin: 32px 0 4px; }
+    .intro { font-size: 15.5px; color: var(--gris); margin: 0 0 22px; max-width: 34em; }
+    .rotulo { display: block; font-size: 12.5px; color: var(--gris); line-height: 1.3; }
+    .valor { display: block; font-weight: 500; font-size: 15px; line-height: 1.35;
+             font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .referencia { letter-spacing: .03em; font-variant-numeric: tabular-nums slashed-zero; }
+    .cifra { font-family: var(--display); font-weight: 600; font-variant-numeric: tabular-nums;
+             letter-spacing: .01em; }
+
+    /* ── Formularios y botones ─────────────────────── */
+    .campo-texto { display: block; width: 100%; height: 56px; margin-top: 8px; padding: 0 16px;
+                   background: var(--papel); border: 1.5px solid var(--niebla); border-radius: 12px;
+                   font-size: 17px; letter-spacing: .04em; text-transform: uppercase;
+                   font-variant-numeric: slashed-zero; }
+    .campo-texto::placeholder { color: #9AA8B8; letter-spacing: .02em; }
+    .campo-texto:focus { border-color: var(--marca); outline: none; box-shadow: 0 0 0 4px #D3E4F5; }
+    .etiqueta { font-weight: 500; font-size: 14.5px; }
+
+    .boton { display: flex; align-items: center; justify-content: center; width: 100%;
+             min-height: 54px; margin-top: 16px; padding: 0 20px; border: 0; border-radius: 12px;
+             background: var(--marca); color: #fff; font-weight: 700; font-size: 16.5px;
+             cursor: pointer; }
+    .boton:hover:not(:disabled) { background: var(--marca-hondo); }
+    .boton:disabled { opacity: .65; cursor: progress; }
+    .boton-linea { display: flex; align-items: center; justify-content: center; width: 100%;
+                   min-height: 48px; margin-top: 14px; padding: 0 18px; border-radius: 12px;
+                   background: transparent; border: 1.5px solid var(--marca); color: var(--marca);
+                   font-weight: 700; font-size: 15px; cursor: pointer; }
+    .boton-linea:hover { background: #DCE8F4; }
+    .enlace { display: block; margin: 14px auto 0; padding: 6px; background: none; border: 0;
+              color: var(--marca); font-weight: 500; font-size: 14.5px; text-decoration: underline;
+              text-underline-offset: 3px; cursor: pointer; }
+
+    .error { color: var(--error); font-size: 14px; line-height: 1.45; margin: 10px 0 0; }
+    .error:empty { display: none; }
+
+    /* ── Pase de matrícula (el elemento protagonista) ── */
+    .pase { position: relative; background: var(--papel); border-radius: 16px;
+            box-shadow: var(--sombra-pase); }
+    .pase-titular { padding: 20px 20px 4px; }
+    .pase-titular .rotulo { margin-bottom: 2px; }
+    .pase-nombre { font: 600 28px/1.05 var(--display); letter-spacing: .01em; margin: 0; }
+    .pase-campos { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px;
+                   padding: 16px 20px 20px; margin: 0; }
+    .pase-campos > div { min-width: 0; }
+    .pase-campos dd { margin: 2px 0 0; }
+    .ancho { grid-column: 1 / -1; }
+
+    /* Línea de corte con muescas, como un pase de abordar */
+    .corte { position: relative; height: 0; margin: 0 18px; border-top: 2px dashed var(--niebla); }
+    .corte::before, .corte::after { content: ""; position: absolute; top: -13px; width: 24px; height: 24px;
+                                    border-radius: 50%; background: var(--cielo); }
+    .corte::before { left: -30px; }
+    .corte::after { right: -30px; }
+
+    .talon { padding: 16px 20px 20px; }
+    .talon .rotulo { margin-bottom: 4px; }
+    .talon .cifra { font-size: 44px; line-height: 1; }
+    .talon .moneda { font: 600 16px var(--display); color: var(--gris); margin-left: 4px; }
+
+    #vista-pago .pase { animation: imprimir .7s cubic-bezier(.2, .7, .2, 1) both; }
+    @keyframes imprimir {
+      from { clip-path: inset(0 0 100% 0 round 16px); transform: translateY(-10px); }
+      to   { clip-path: inset(0 0 0 0 round 16px); transform: none; }
+    }
+
+    /* ── Selector de método (estilo selector de tarifas) ── */
+    .tarifas { border: 0; padding: 0; margin: 0; }
+    .tarifas legend { padding: 0; }
+    .ayuda { font-size: 14.5px; color: var(--gris); margin: 0 0 14px; }
+    .tarifa { display: grid; grid-template-columns: 22px 1fr auto; align-items: start; gap: 12px;
+              padding: 16px; margin-top: 10px; background: var(--papel); cursor: pointer;
+              border: 1.5px solid var(--niebla); border-radius: 14px; }
+    .tarifa:hover { border-color: #9DB7D3; }
+    .tarifa input { appearance: none; width: 22px; height: 22px; margin: 1px 0 0;
+                    border: 2px solid #9DB7D3; border-radius: 50%; background: #fff; cursor: pointer; }
+    .tarifa input:checked { border: 7px solid var(--marca); }
+    .tarifa:has(input:checked) { border-color: var(--marca); box-shadow: 0 0 0 3px #D3E4F5; }
+    .tarifa:has(input:checked) + .panel { display: block; }
+    .tarifa-nombre { font-weight: 700; font-size: 16px; line-height: 1.3; }
+    .tarifa-detalle { display: block; font-weight: 400; font-size: 13.5px; color: var(--gris);
+                      margin-top: 3px; line-height: 1.45; }
+    .tarifa-precio { text-align: right; }
+    .tarifa-precio .cifra { display: block; font-size: 22px; line-height: 1.1; }
+    .distintivo { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 700;
+                  color: var(--marca); }
+    .distintivo.neutro { color: var(--ok); }
+
+    .panel { display: none; margin: -6px 0 0; padding: 20px 16px 16px;
+             background: var(--papel); border: 1.5px solid var(--marca); border-top: 0;
+             border-radius: 0 0 14px 14px; }
+    .tarifa:has(input:checked) { border-radius: 14px 14px 0 0; border-bottom-color: transparent; box-shadow: none; }
+
+    .desglose { margin: 0; }
+    .desglose div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0;
+                    font-size: 14.5px; font-variant-numeric: tabular-nums; }
+    .desglose dt { color: var(--gris); }
+    .desglose dd { margin: 0; text-align: right; }
+    .desglose .total { margin-top: 6px; padding-top: 12px; border-top: 1.5px solid var(--tinta); }
+    .desglose .total dt { color: var(--tinta); font-weight: 700; }
+    .desglose .total dd { font: 600 22px/1 var(--display); }
+    .metodos { font-size: 13px; color: var(--gris); margin: 12px 0 0; }
+    .seguro { display: flex; align-items: center; justify-content: center; gap: 7px;
+              font-size: 12.5px; color: var(--gris); margin: 12px 0 0; }
+
+    .cuenta { margin: 0; }
+    .cuenta div { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+                  padding: 10px 0; border-bottom: 1px solid #E3EAF2; font-size: 14.5px; }
+    .cuenta div:last-child { border-bottom: 0; }
+    .cuenta dt { color: var(--gris); }
+    .cuenta dd { margin: 0; display: flex; align-items: center; gap: 8px; text-align: right;
+                 font-weight: 500; font-variant-numeric: tabular-nums; }
+    .copiar { flex: none; padding: 5px 10px; border: 1.5px solid var(--niebla); border-radius: 8px;
+              background: #fff; font-size: 12.5px; font-weight: 700; color: var(--marca); cursor: pointer; }
+    .copiar:hover { border-color: var(--marca); }
+    .nota { font-size: 13px; color: var(--gris); line-height: 1.5; margin: 10px 0 0; }
+
+    /* ── Comprobante ───────────────────────────────── */
+    .soltar { display: block; padding: 22px 16px; margin-top: 4px; text-align: center; cursor: pointer;
+              background: var(--papel); border: 2px dashed #9DB7D3; border-radius: 14px; }
+    .soltar:hover, .soltar:focus-within { border-color: var(--marca); }
+    .soltar input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .soltar strong { display: block; color: var(--marca); font-size: 15.5px; }
+    .soltar span { display: block; font-size: 13px; color: var(--gris); margin-top: 4px; overflow-wrap: anywhere; }
+
+    /* ── Estados ───────────────────────────────────── */
+    .estado { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 999px;
+              font-size: 13px; font-weight: 700; }
+    .estado::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .estado-ambar { background: var(--ambar-suave); color: var(--ambar); }
+    .resumen { margin-top: 20px; }
+
+    .sello { position: absolute; right: 18px; bottom: 74px; z-index: 1; padding: 4px 12px 2px;
+             background: rgba(255, 255, 255, .85);
+             border: 3px solid var(--ok); border-radius: 8px; color: var(--ok);
+             font: 700 24px/1 var(--display); letter-spacing: .04em; transform: rotate(-9deg);
+             animation: sellar .45s cubic-bezier(.3, 1.4, .5, 1) .15s both; }
+    @keyframes sellar { from { opacity: 0; transform: rotate(-9deg) scale(1.6); }
+                        to   { opacity: .92; transform: rotate(-9deg) scale(1); } }
+
+    .anillo { width: 44px; height: 44px; margin: 4px 0 18px; border-radius: 50%;
+              border: 3px solid #CFDDEB; border-top-color: var(--marca);
+              animation: girar .9s linear infinite; }
     @keyframes girar { to { transform: rotate(360deg); } }
-    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
+
+    @media (prefers-reduced-motion: reduce) {
+      #vista-pago .pase, .sello { animation: none; }
+      .anillo { animation-duration: 2.5s; }
+    }
+    @media (max-width: 360px) {
+      h1 { font-size: 30px; }
+      .talon .cifra { font-size: 34px; }
+      .pase-campos { grid-template-columns: 1fr; }
+    }
   </style>
   <script src="https://checkout.wompi.co/widget.js"></script>
 </head>
 <body>
-<main>
-  <div class="tarjeta">
-    <header class="encabezado">
-      <div class="logo">NESA</div>
-      <div class="fundacion">Fundación<br>Néstor Sanín Cano</div>
-    </header>
-
-    <div class="cuerpo">
-      <!-- Vista 1: consulta -->
-      <section id="vista-consulta">
-        <h1>Pago de matrícula</h1>
-        <p class="sub">Escribe la referencia de pago que te entregó la fundación para ver tu saldo.</p>
-        <form id="form-consulta" novalidate>
-          <label for="referencia">Referencia de pago</label>
-          <input id="referencia" type="text" placeholder="NESA-1234567890-PR345154"
-                 autocomplete="off" autocapitalize="characters" spellcheck="false">
-          <p id="error-consulta" class="error" role="alert"></p>
-          <button id="btn-consultar" class="boton" type="submit">Consultar</button>
-        </form>
-      </section>
-
-      <!-- Vista 2: datos y opciones de pago -->
-      <section id="vista-pago" hidden>
-        <p class="sub" style="margin:0">Hola,</p>
-        <h1 data-campo="nombre"></h1>
-        <div class="fila"><span>Documento</span><span>CC <span data-campo="cc"></span></span></div>
-        <div class="fila"><span>Programa</span><span data-campo="programa"></span></div>
-        <div class="fila"><span>Periodo</span><span data-campo="periodo"></span></div>
-        <div class="fila"><span>Concepto</span><span data-campo="concepto"></span></div>
-        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
-
-        <div class="saldo">
-          <p>Saldo pendiente</p>
-          <strong data-campo="saldo"></strong>
-        </div>
-
-        <h2>Elige cómo pagar</h2>
-
-        <!-- Opción A: pago en línea -->
-        <article id="opcion-wompi" class="opcion opcion-destacada">
-          <div class="opcion-cabeza">
-            <div>
-              <h3>Pago en línea</h3>
-              <p>Tu pago queda aprobado de inmediato.</p>
-            </div>
-            <span class="insignia">Inmediato</span>
-          </div>
-          <div class="metodos">
-            <span>PSE</span><span>Tarjeta débito</span><span>Tarjeta crédito</span>
-            <span>Nequi</span><span>Botón Bancolombia</span>
-          </div>
-          <div class="desglose">
-            <div class="fila"><span>Saldo de matrícula</span><span data-campo="saldo"></span></div>
-            <div class="fila"><span>Costo de procesamiento</span><span data-campo="comisionWompi"></span></div>
-            <div class="fila total"><span>Total a pagar</span><span data-campo="totalWompi"></span></div>
-          </div>
-          <button id="btn-wompi" class="boton" type="button">Pagar en línea</button>
-          <p id="error-wompi" class="error" role="alert"></p>
-          <p class="seguro">
-            <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
-              <path fill="currentColor" d="M6 0a3.5 3.5 0 0 0-3.5 3.5V6H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-.5V3.5A3.5 3.5 0 0 0 6 0Zm2 6H4V3.5a2 2 0 1 1 4 0V6Z"/>
-            </svg>
-            Pago seguro procesado por Wompi
-          </p>
-        </article>
-
-        <!-- Opción B: transferencia -->
-        <article class="opcion">
-          <div class="opcion-cabeza">
-            <div>
-              <h3>Transferencia bancaria</h3>
-              <p>Sin costo adicional. Verificamos tu pago en máximo un día hábil.</p>
-            </div>
-            <span class="insignia neutra">Sin costo</span>
-          </div>
-          <button id="btn-ver-cuenta" class="secundario" type="button">Ver datos para transferir</button>
-          <div id="datos-cuenta" hidden>
-            <div class="caja">
-              <div class="fila"><span>Banco</span><span>Bancolombia</span></div>
-              <div class="fila"><span>Cuenta de ahorros</span>
-                <span><span class="mono">556-559913-43</span><button class="copiar" type="button" data-copiar="55655991343">Copiar</button></span>
-              </div>
-              <div class="fila"><span>Valor exacto</span><span data-campo="saldo"></span></div>
-              <div class="fila"><span>Referencia</span>
-                <span><button class="copiar" type="button" data-copiar="referencia">Copiar</button></span>
-              </div>
-            </div>
-            <p class="nota">Escribe la referencia en la descripción de la transferencia y transfiere el valor exacto en un solo pago.</p>
-            <p class="nota">Al inscribir la cuenta, tu banco mostrará las iniciales A. M. M., correspondientes al recaudo de la fundación.</p>
-            <button id="btn-ya-pague" class="secundario" type="button">Ya transferí, subir comprobante</button>
-          </div>
-        </article>
-      </section>
-
-      <!-- Vista 3: comprobante -->
-      <section id="vista-comprobante" hidden>
-        <h1>Sube tu comprobante</h1>
-        <p class="sub">Adjunta la imagen o el PDF de tu transferencia por <span data-campo="saldo"></span>
-          con la referencia <span class="mono" data-campo="referencia"></span>.</p>
-        <input id="archivo" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
-        <p id="error-comprobante" class="error" role="alert"></p>
-        <button id="btn-enviar" class="boton" type="button">Enviar comprobante</button>
-        <button id="btn-volver" class="secundario" type="button">Volver a los datos de pago</button>
-      </section>
-
-      <!-- Vista 4: en verificación (transferencia) -->
-      <section id="vista-verificacion" hidden>
-        <div class="centro">
-          <div class="icono" style="background:var(--aviso-bg);color:var(--aviso)">◷</div>
-          <h1 id="titulo-verificacion">Recibimos tu comprobante</h1>
-          <p class="sub">Gracias, <span data-campo="primerNombre"></span>. Estamos verificando tu transferencia.
-            Una vez la confirmemos, el pago quedará aplicado a tu matrícula.</p>
-        </div>
-        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
-        <div class="fila"><span>Valor reportado</span><span data-campo="saldo"></span></div>
-        <div class="fila"><span>Comprobante enviado</span><span data-campo="fechaComprobante"></span></div>
-        <div class="fila"><span>Estado</span><span style="color:var(--aviso)">En verificación</span></div>
-        <p class="pie">La verificación toma hasta un día hábil. Puedes consultar el estado con tu referencia
-          en esta misma página. No es necesario que vuelvas a transferir.</p>
-      </section>
-
-      <!-- Vista 5: pago en línea en proceso -->
-      <section id="vista-procesando" hidden>
-        <div class="centro">
-          <div class="spinner" aria-hidden="true"></div>
-          <h1 id="titulo-procesando">Confirmando tu pago</h1>
-          <p id="texto-procesando" class="sub">Esto toma unos segundos. No cierres esta página.</p>
-        </div>
-        <button id="btn-actualizar" class="boton" type="button" hidden>Actualizar estado</button>
-        <p id="error-procesando" class="error" role="alert"></p>
-      </section>
-
-      <!-- Vista 6: aprobado -->
-      <section id="vista-aprobado" hidden>
-        <div class="centro">
-          <div class="icono" style="background:var(--ok-bg);color:var(--ok)">✓</div>
-          <h1>Pago aprobado</h1>
-          <p class="sub">Tu saldo de matrícula del periodo <span data-campo="periodo"></span> quedó al día.</p>
-        </div>
-        <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
-        <div class="fila"><span>Método</span><span data-campo="metodo"></span></div>
-        <div class="fila"><span>Valor pagado</span><span data-campo="valorPagado"></span></div>
-        <div class="fila"><span>Aprobado</span><span data-campo="fechaAprobacion"></span></div>
-        <p class="pie">Fundación Néstor Sanín Cano</p>
-      </section>
-    </div>
+<header class="banda">
+  <div class="banda-interior">
+    <div class="marca" aria-label="NESA">NESA</div>
+    <div class="fundacion">Fundación<br>Néstor Sanín Cano</div>
   </div>
+</header>
+
+<main>
+  <!-- Vista 1: consulta -->
+  <section id="vista-consulta">
+    <h1>Paga tu matrícula</h1>
+    <p class="intro">Escribe la referencia de pago que te entregó la fundación para ver tu saldo y elegir cómo pagar.</p>
+    <form id="form-consulta" novalidate>
+      <label class="etiqueta" for="referencia">Referencia de pago</label>
+      <input id="referencia" class="campo-texto" type="text" placeholder="NESA-1234567890-PR345154"
+             autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text">
+      <p id="error-consulta" class="error" role="alert"></p>
+      <button id="btn-consultar" class="boton" type="submit">Consultar saldo</button>
+    </form>
+  </section>
+
+  <!-- Vista 2: pase de matrícula y métodos de pago -->
+  <section id="vista-pago" hidden>
+    <article class="pase" aria-label="Datos de tu matrícula">
+      <div class="pase-titular">
+        <span class="rotulo">Estudiante</span>
+        <p class="pase-nombre" data-campo="nombre"></p>
+      </div>
+      <dl class="pase-campos">
+        <div class="ancho"><dt class="rotulo">Programa</dt><dd class="valor" data-campo="programa"></dd></div>
+        <div><dt class="rotulo">Documento</dt><dd class="valor">CC <span data-campo="cc"></span></dd></div>
+        <div><dt class="rotulo">Periodo</dt><dd class="valor" data-campo="periodo"></dd></div>
+        <div class="ancho"><dt class="rotulo">Concepto</dt><dd class="valor" data-campo="concepto"></dd></div>
+        <div class="ancho"><dt class="rotulo">Referencia</dt><dd class="valor referencia" data-campo="referencia"></dd></div>
+      </dl>
+      <div class="corte" aria-hidden="true"></div>
+      <div class="talon">
+        <span class="rotulo">Saldo pendiente</span>
+        <span><span class="cifra" data-campo="saldoNumero"></span><span class="moneda">COP</span></span>
+      </div>
+    </article>
+
+    <fieldset class="tarifas">
+      <legend><h2>¿Cómo quieres pagar?</h2></legend>
+      <p class="ayuda">Elige una opción para ver los pasos.</p>
+
+      <label id="tarifa-wompi" class="tarifa">
+        <input type="radio" name="metodo" value="wompi">
+        <span class="tarifa-nombre">Pago en línea
+          <span class="tarifa-detalle">PSE, tarjeta débito o crédito, Nequi y Botón Bancolombia.</span>
+        </span>
+        <span class="tarifa-precio">
+          <span class="cifra" data-campo="totalWompiNumero"></span>
+          <span class="distintivo">Aprobación inmediata</span>
+        </span>
+      </label>
+      <div id="panel-wompi" class="panel">
+        <dl class="desglose">
+          <div><dt>Saldo de matrícula</dt><dd data-campo="saldo"></dd></div>
+          <div><dt>Costo de procesamiento</dt><dd data-campo="comisionWompi"></dd></div>
+          <div class="total"><dt>Total a pagar</dt><dd data-campo="totalWompi"></dd></div>
+        </dl>
+        <button id="btn-wompi" class="boton" type="button">Pagar en línea</button>
+        <p id="error-wompi" class="error" role="alert"></p>
+        <p class="seguro">
+          <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
+            <path fill="currentColor" d="M6 0a3.5 3.5 0 0 0-3.5 3.5V6H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-.5V3.5A3.5 3.5 0 0 0 6 0Zm2 6H4V3.5a2 2 0 1 1 4 0V6Z"/>
+          </svg>
+          Pago seguro procesado por Wompi
+        </p>
+      </div>
+
+      <label id="tarifa-transferencia" class="tarifa">
+        <input type="radio" name="metodo" value="transferencia">
+        <span class="tarifa-nombre">Transferencia bancaria
+          <span class="tarifa-detalle">Verificamos tu pago en máximo un día hábil.</span>
+        </span>
+        <span class="tarifa-precio">
+          <span class="cifra" data-campo="saldoNumero"></span>
+          <span class="distintivo neutro">Sin costo adicional</span>
+        </span>
+      </label>
+      <div id="panel-transferencia" class="panel">
+        <dl class="cuenta">
+          <div><dt>Banco</dt><dd>Bancolombia</dd></div>
+          <div><dt>Cuenta de ahorros</dt>
+            <dd>556-559913-43<button class="copiar" type="button" data-copiar="55655991343">Copiar</button></dd></div>
+          <div><dt>Valor exacto</dt><dd data-campo="saldo"></dd></div>
+          <div><dt>Referencia</dt>
+            <dd><button class="copiar" type="button" data-copiar="referencia">Copiar</button></dd></div>
+        </dl>
+        <p class="nota">Escribe la referencia en la descripción de la transferencia y envía el valor exacto en un solo pago.</p>
+        <p class="nota">Al inscribir la cuenta, tu banco mostrará las iniciales A.&nbsp;M.&nbsp;M., que corresponden al recaudo de la fundación.</p>
+        <button id="btn-ya-pague" class="boton-linea" type="button">Ya transferí, subir comprobante</button>
+      </div>
+    </fieldset>
+  </section>
+
+  <!-- Vista 3: comprobante -->
+  <section id="vista-comprobante" hidden>
+    <h1>Sube tu comprobante</h1>
+    <p class="intro">Adjunta la imagen o el PDF de tu transferencia por <strong data-campo="saldo"></strong>
+      con la referencia <span class="referencia" data-campo="referencia"></span>.</p>
+    <label class="soltar">
+      <input id="archivo" type="file" accept="image/jpeg,image/png,image/webp,application/pdf">
+      <strong>Elegir archivo</strong>
+      <span id="nombre-archivo">JPG, PNG, WEBP o PDF de máximo 5 MB</span>
+    </label>
+    <p id="error-comprobante" class="error" role="alert"></p>
+    <button id="btn-enviar" class="boton" type="button">Enviar comprobante</button>
+    <button id="btn-volver" class="enlace" type="button">Volver a los métodos de pago</button>
+  </section>
+
+  <!-- Vista 4: transferencia en verificación -->
+  <section id="vista-verificacion" hidden>
+    <span class="estado estado-ambar">En verificación</span>
+    <h1 id="titulo-verificacion" style="margin-top:14px">Recibimos tu comprobante</h1>
+    <p class="intro">Gracias, <span data-campo="primerNombre"></span>. Estamos verificando tu transferencia.
+      Cuando la confirmemos, el pago quedará aplicado a tu matrícula.</p>
+    <article class="pase">
+      <dl class="pase-campos">
+        <div class="ancho"><dt class="rotulo">Referencia</dt><dd class="valor referencia" data-campo="referencia"></dd></div>
+        <div><dt class="rotulo">Valor reportado</dt><dd class="valor" data-campo="saldo"></dd></div>
+        <div><dt class="rotulo">Comprobante enviado</dt><dd class="valor" data-campo="fechaComprobante"></dd></div>
+      </dl>
+    </article>
+    <p class="nota" style="margin-top:16px">La verificación toma hasta un día hábil. Puedes consultar el estado con tu
+      referencia en esta misma página. No vuelvas a transferir.</p>
+  </section>
+
+  <!-- Vista 5: pago en línea en proceso -->
+  <section id="vista-procesando" hidden>
+    <div class="anillo" aria-hidden="true"></div>
+    <h1 id="titulo-procesando">Confirmando tu pago</h1>
+    <p id="texto-procesando" class="intro">Esto toma unos segundos. No cierres esta página.</p>
+    <button id="btn-actualizar" class="boton" type="button" hidden>Actualizar estado</button>
+    <p id="error-procesando" class="error" role="alert"></p>
+  </section>
+
+  <!-- Vista 6: aprobado -->
+  <section id="vista-aprobado" hidden>
+    <h1>Tu matrícula está al día</h1>
+    <p class="intro">Recibimos el pago de tu saldo del periodo <span data-campo="periodo"></span>.</p>
+    <article class="pase">
+      <div class="sello" aria-hidden="true">Pagado</div>
+      <div class="pase-titular">
+        <span class="rotulo">Estudiante</span>
+        <p class="pase-nombre" data-campo="nombre"></p>
+      </div>
+      <dl class="pase-campos">
+        <div class="ancho"><dt class="rotulo">Método</dt><dd class="valor" data-campo="metodo"></dd></div>
+        <div class="ancho"><dt class="rotulo">Aprobado</dt><dd class="valor" data-campo="fechaAprobacion"></dd></div>
+        <div class="ancho"><dt class="rotulo">Referencia</dt><dd class="valor referencia" data-campo="referencia"></dd></div>
+      </dl>
+      <div class="corte" aria-hidden="true"></div>
+      <div class="talon">
+        <span class="rotulo">Valor pagado</span>
+        <span><span class="cifra" data-campo="valorPagadoNumero"></span><span class="moneda">COP</span></span>
+      </div>
+    </article>
+  </section>
 </main>
+
+<footer class="pie-pagina">Fundación Néstor Sanín Cano. Si tienes dudas sobre tu saldo, escríbenos por nuestros canales oficiales.</footer>
 
 <script>
   // ── Configuración ──────────────────────────────────────
@@ -273,12 +397,12 @@
     ARCHIVO_GRANDE: 'El archivo supera 5 MB. Envía una imagen más liviana.',
     INTERNO: 'No pudimos completar la solicitud. Intenta de nuevo en unos minutos.',
     RED: 'No hay conexión. Revisa tu internet e intenta de nuevo.',
-    RECHAZADA: 'El pago no fue aprobado por tu banco o entidad. Puedes intentarlo de nuevo o pagar por transferencia.',
-    SIN_WIDGET: 'No pudimos cargar el módulo de pago en línea. Recarga la página e intenta de nuevo.',
+    RECHAZADA: 'Tu banco o entidad no aprobó el pago. Puedes intentarlo de nuevo o pagar por transferencia.',
+    SIN_WIDGET: 'No se cargó el módulo de pago en línea. Recarga la página e intenta de nuevo.',
     NO_DISPONIBLE: 'El pago en línea no está disponible en este momento. Puedes pagar por transferencia.'
   };
 
-  const formatoPesos = new Intl.NumberFormat('es-CO', {
+  const formatoNumero = new Intl.NumberFormat('es-CO', {
     style: 'currency', currency: 'COP', maximumFractionDigits: 0
   });
   const formatoFecha = new Intl.DateTimeFormat('es-CO', {
@@ -288,7 +412,8 @@
   let estudiante = null;
   const $ = (id) => document.getElementById(id);
   const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
-  const pesos = (valor) => `${formatoPesos.format(valor)} COP`;
+  const numero = (valor) => formatoNumero.format(valor);
+  const pesos = (valor) => `${numero(valor)} COP`;
 
   // ── Comunicación con el backend ────────────────────────
   async function api(parametros) {
@@ -312,6 +437,7 @@
   function pintar(datos) {
     const wompi = datos.wompi;
     const pagoEnLinea = datos.metodoPago === 'Wompi';
+    const pagado = pagoEnLinea && datos.valorCobrado ? datos.valorCobrado : datos.saldo;
     const valores = {
       nombre: datos.nombre,
       primerNombre: String(datos.nombre).split(' ')[0],
@@ -321,22 +447,28 @@
       concepto: datos.concepto,
       referencia: datos.referencia,
       saldo: pesos(datos.saldo),
+      saldoNumero: numero(datos.saldo),
       comisionWompi: wompi ? pesos(wompi.comision) : '',
       totalWompi: wompi ? pesos(wompi.total) : '',
-      metodo: pagoEnLinea ? 'Pago en línea' : 'Transferencia bancaria',
-      valorPagado: pesos(pagoEnLinea && datos.valorCobrado ? datos.valorCobrado : datos.saldo),
+      totalWompiNumero: wompi ? numero(wompi.total) : '',
+      metodo: pagoEnLinea ? 'Pago en línea' : 'Transferencia',
+      valorPagadoNumero: numero(pagado),
       fechaComprobante: fechaLegible(datos.fechaComprobante),
       fechaAprobacion: fechaLegible(datos.fechaAprobacion)
     };
     document.querySelectorAll('[data-campo]').forEach((elemento) => {
       elemento.textContent = valores[elemento.dataset.campo] ?? '';
     });
-    $('btn-wompi').textContent = wompi ? `Pagar ${formatoPesos.format(wompi.total)}` : 'Pagar en línea';
+    $('btn-wompi').textContent = wompi ? `Pagar ${numero(wompi.total)}` : 'Pagar en línea';
+  }
+
+  function reiniciarMetodos() {
+    document.querySelectorAll('input[name="metodo"]').forEach((opcion) => { opcion.checked = false; });
+    $('error-wompi').textContent = '';
   }
 
   function mostrarSegunEstado(recienEnviado = false) {
     pintar(estudiante);
-    $('error-wompi').textContent = '';
     if (estudiante.estado === 'Pagado') {
       mostrarVista('vista-aprobado');
     } else if (estudiante.estado === 'En verificación') {
@@ -347,7 +479,8 @@
     } else if (estudiante.pagoEnProceso) {
       mostrarProcesando(true);
     } else {
-      $('opcion-wompi').hidden = !estudiante.wompi;
+      reiniciarMetodos();
+      $('tarifa-wompi').hidden = !estudiante.wompi;
       mostrarVista('vista-pago');
     }
   }
@@ -356,9 +489,9 @@
   function mostrarProcesando(enEspera) {
     $('titulo-procesando').textContent = enEspera ? 'Tu pago está en proceso' : 'Confirmando tu pago';
     $('texto-procesando').textContent = enEspera
-      ? 'Tu banco aún no confirma la transacción. Cuando se apruebe, tu saldo quedará al día automáticamente. Puedes consultar el estado con tu referencia en esta misma página. No vuelvas a pagar.'
+      ? 'Tu banco aún no confirma la transacción. Cuando se apruebe, tu matrícula quedará al día automáticamente. Puedes consultar el estado con tu referencia en esta misma página. No vuelvas a pagar.'
       : 'Esto toma unos segundos. No cierres esta página.';
-    document.querySelector('#vista-procesando .spinner').hidden = enEspera;
+    document.querySelector('#vista-procesando .anillo').hidden = enEspera;
     $('btn-actualizar').hidden = !enEspera || !estudiante;
     $('error-procesando').textContent = '';
     mostrarVista('vista-procesando');
@@ -380,7 +513,7 @@
     if (!CONFIG.PATRON.test(ref)) { error.textContent = MENSAJES.FORMATO; return; }
 
     const boton = $('btn-consultar');
-    ocupado(boton, true, 'Consultando…', 'Consultar');
+    ocupado(boton, true, 'Consultando…', 'Consultar saldo');
     try {
       const datos = await api({ ref });
       if (!datos.ok) {
@@ -392,7 +525,7 @@
     } catch (err) {
       error.textContent = MENSAJES.RED;
     } finally {
-      ocupado(boton, false, 'Consultando…', 'Consultar');
+      ocupado(boton, false, 'Consultando…', 'Consultar saldo');
     }
   }
 
@@ -467,6 +600,7 @@
         if (datos.pago === 'APROBADA') { mostrarSegunEstado(); return; }
         if (datos.pago === 'RECHAZADA') {
           mostrarSegunEstado();
+          $('tarifa-wompi').querySelector('input').checked = true;
           $('error-wompi').textContent = MENSAJES.RECHAZADA;
           return;
         }
@@ -545,17 +679,16 @@
   // ── Eventos ────────────────────────────────────────────
   $('form-consulta').addEventListener('submit', consultar);
   $('referencia').addEventListener('input', () => { $('error-consulta').textContent = ''; });
-  $('btn-ver-cuenta').addEventListener('click', () => {
-    const caja = $('datos-cuenta');
-    caja.hidden = !caja.hidden;
-    $('btn-ver-cuenta').textContent = caja.hidden ? 'Ver datos para transferir' : 'Ocultar datos para transferir';
-  });
   $('btn-wompi').addEventListener('click', pagarEnLinea);
   $('btn-actualizar').addEventListener('click', actualizarEstado);
   $('btn-ya-pague').addEventListener('click', () => mostrarVista('vista-comprobante'));
   $('btn-volver').addEventListener('click', () => mostrarVista('vista-pago'));
   $('btn-enviar').addEventListener('click', enviarComprobante);
-  $('archivo').addEventListener('change', () => { $('error-comprobante').textContent = ''; });
+  $('archivo').addEventListener('change', () => {
+    const archivo = $('archivo').files[0];
+    $('nombre-archivo').textContent = archivo ? archivo.name : 'JPG, PNG, WEBP o PDF de máximo 5 MB';
+    $('error-comprobante').textContent = '';
+  });
   document.addEventListener('click', (evento) => {
     if (evento.target.classList.contains('copiar')) copiar(evento.target);
   });
