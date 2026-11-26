@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#185FA5">
   <title>Pago de matrícula · Fundación Néstor Sanín Cano</title>
   <style>
     :root {
       --marca: #185FA5;
+      --marca-oscuro: #124A82;
       --marca-claro: #E6F1FB;
       --texto: #1f1f1f;
       --texto-sec: #5f5e5a;
@@ -22,9 +24,11 @@
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
     body { margin: 0; background: var(--fondo); color: var(--texto);
-           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    main { max-width: 420px; margin: 0 auto; padding: 24px 16px; }
-    .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; }
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+           -webkit-font-smoothing: antialiased; }
+    main { max-width: 440px; margin: 0 auto; padding: 24px 16px 32px; }
+    .tarjeta { background: #fff; border: 1px solid var(--borde); border-radius: 16px; overflow: hidden;
+               box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04); }
     .encabezado { background: var(--marca); color: #fff; padding: 18px 20px;
                   display: flex; align-items: center; gap: 12px; }
     .logo { font-size: 28px; font-weight: 600; font-style: italic; letter-spacing: 1px;
@@ -32,23 +36,31 @@
     .fundacion { font-size: 13px; line-height: 1.4; color: var(--marca-claro); }
     .cuerpo { padding: 22px 20px; }
     h1 { font-size: 20px; font-weight: 600; margin: 0 0 6px; }
+    h2 { font-size: 15px; font-weight: 600; margin: 22px 0 2px; }
+    h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
     .sub { font-size: 14px; color: var(--texto-sec); margin: 0 0 18px; line-height: 1.6; }
     label { font-size: 14px; color: var(--texto-sec); }
     input[type=text] { width: 100%; height: 44px; margin-top: 6px; padding: 0 12px;
                        font: 15px ui-monospace, monospace; text-transform: uppercase;
                        border: 1px solid var(--borde); border-radius: 8px; }
+    input[type=text]:focus { outline: 2px solid var(--marca-claro); border-color: var(--marca); }
     input[type=file] { width: 100%; font-size: 14px; }
-    .boton { width: 100%; height: 46px; margin-top: 12px; border: none; border-radius: 8px;
-             background: var(--marca); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer; }
+    .boton { width: 100%; height: 48px; margin-top: 12px; border: none; border-radius: 10px;
+             background: var(--marca); color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+             transition: background .15s; }
+    .boton:hover:not(:disabled) { background: var(--marca-oscuro); }
     .boton:disabled { opacity: .6; cursor: wait; }
     .secundario { width: 100%; height: 42px; margin-top: 10px; background: #fff; color: var(--texto);
-                  border: 1px solid var(--borde); border-radius: 8px; font-size: 14px; cursor: pointer; }
-    .error { color: var(--error); font-size: 14px; min-height: 20px; margin: 8px 0 0; }
+                  border: 1px solid var(--borde); border-radius: 10px; font-size: 14px; cursor: pointer; }
+    .secundario:hover { background: var(--fondo); }
+    .error { color: var(--error); font-size: 14px; min-height: 20px; margin: 8px 0 0; line-height: 1.5; }
+    .error:empty { min-height: 0; margin: 0; }
     .fila { display: flex; justify-content: space-between; align-items: center; gap: 12px;
             padding: 8px 0; border-bottom: 1px solid var(--borde); font-size: 14px; }
     .fila > span:first-child { color: var(--texto-sec); white-space: nowrap; }
     .fila > span:last-child { text-align: right; }
-    .saldo { background: var(--fondo); border-radius: 8px; padding: 16px; margin: 16px 0; text-align: center; }
+    .fila.total > span { color: var(--texto); font-weight: 600; font-size: 15px; }
+    .saldo { background: var(--fondo); border-radius: 10px; padding: 16px; margin: 16px 0 0; text-align: center; }
     .saldo p { margin: 0; font-size: 13px; color: var(--texto-sec); }
     .saldo strong { display: block; font-size: 28px; margin-top: 4px; }
     .mono { font-family: ui-monospace, monospace; font-size: 13px; }
@@ -61,7 +73,33 @@
     .icono { width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 12px;
              display: flex; align-items: center; justify-content: center; font-size: 26px; }
     .pie { font-size: 12px; color: var(--texto-sec); text-align: center; margin-top: 16px; line-height: 1.5; }
+
+    /* Opciones de pago */
+    .opcion { border: 1px solid var(--borde); border-radius: 12px; padding: 16px; margin-top: 12px; }
+    .opcion-destacada { border: 1.5px solid var(--marca);
+                        box-shadow: 0 6px 18px rgba(24,95,165,.10); }
+    .opcion-cabeza { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .opcion-cabeza p { margin: 0; font-size: 13px; color: var(--texto-sec); line-height: 1.5; }
+    .insignia { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px;
+                background: var(--marca-claro); color: var(--marca); white-space: nowrap; }
+    .insignia.neutra { background: var(--fondo); color: var(--texto-sec); }
+    .desglose { margin-top: 12px; }
+    .desglose .fila:last-child { border-bottom: none; }
+    .metodos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .metodos span { font-size: 11px; color: var(--texto-sec); border: 1px solid var(--borde);
+                    border-radius: 6px; padding: 3px 7px; }
+    .seguro { display: flex; align-items: center; justify-content: center; gap: 6px;
+              font-size: 12px; color: var(--texto-sec); margin: 10px 0 0; }
+    .seguro svg { flex: none; }
+
+    /* Procesando */
+    .spinner { width: 48px; height: 48px; border-radius: 50%; margin: 8px auto 16px;
+               border: 4px solid var(--marca-claro); border-top-color: var(--marca);
+               animation: girar .9s linear infinite; }
+    @keyframes girar { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
   </style>
+  <script src="https://checkout.wompi.co/widget.js"></script>
 </head>
 <body>
 <main>
@@ -85,7 +123,7 @@
         </form>
       </section>
 
-      <!-- Vista 2: datos y pago -->
+      <!-- Vista 2: datos y opciones de pago -->
       <section id="vista-pago" hidden>
         <p class="sub" style="margin:0">Hola,</p>
         <h1 data-campo="nombre"></h1>
@@ -100,23 +138,62 @@
           <strong data-campo="saldo"></strong>
         </div>
 
-        <button id="btn-ver-cuenta" class="secundario" type="button">Ver datos para transferir</button>
-        <div id="datos-cuenta" hidden>
-          <div class="caja">
-            <div class="fila"><span>Banco</span><span>Bancolombia</span></div>
-            <div class="fila"><span>Cuenta de ahorros</span>
-              <span><span class="mono">556-559913-43</span><button class="copiar" type="button" data-copiar="55655991343">Copiar</button></span>
-            </div>
-            <div class="fila"><span>Referencia</span>
-              <span><button class="copiar" type="button" data-copiar="referencia">Copiar</button></span>
-            </div>
-          </div>
-          <p class="nota">Escribe la referencia en la descripción de la transferencia.</p>
-          <p class="nota">Al inscribir la cuenta, tu banco mostrará las iniciales A. M. M., correspondientes al recaudo de la fundación.</p>
-        </div>
+        <h2>Elige cómo pagar</h2>
 
-        <button id="btn-ya-pague" class="boton" type="button">Ya pagué</button>
-        <p class="pie">Transfiere el valor exacto en un solo pago.</p>
+        <!-- Opción A: pago en línea -->
+        <article id="opcion-wompi" class="opcion opcion-destacada">
+          <div class="opcion-cabeza">
+            <div>
+              <h3>Pago en línea</h3>
+              <p>Tu pago queda aprobado de inmediato.</p>
+            </div>
+            <span class="insignia">Inmediato</span>
+          </div>
+          <div class="metodos">
+            <span>PSE</span><span>Tarjeta débito</span><span>Tarjeta crédito</span>
+            <span>Nequi</span><span>Botón Bancolombia</span>
+          </div>
+          <div class="desglose">
+            <div class="fila"><span>Saldo de matrícula</span><span data-campo="saldo"></span></div>
+            <div class="fila"><span>Costo de procesamiento</span><span data-campo="comisionWompi"></span></div>
+            <div class="fila total"><span>Total a pagar</span><span data-campo="totalWompi"></span></div>
+          </div>
+          <button id="btn-wompi" class="boton" type="button">Pagar en línea</button>
+          <p id="error-wompi" class="error" role="alert"></p>
+          <p class="seguro">
+            <svg width="12" height="14" viewBox="0 0 12 14" aria-hidden="true">
+              <path fill="currentColor" d="M6 0a3.5 3.5 0 0 0-3.5 3.5V6H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-.5V3.5A3.5 3.5 0 0 0 6 0Zm2 6H4V3.5a2 2 0 1 1 4 0V6Z"/>
+            </svg>
+            Pago seguro procesado por Wompi
+          </p>
+        </article>
+
+        <!-- Opción B: transferencia -->
+        <article class="opcion">
+          <div class="opcion-cabeza">
+            <div>
+              <h3>Transferencia bancaria</h3>
+              <p>Sin costo adicional. Verificamos tu pago en máximo un día hábil.</p>
+            </div>
+            <span class="insignia neutra">Sin costo</span>
+          </div>
+          <button id="btn-ver-cuenta" class="secundario" type="button">Ver datos para transferir</button>
+          <div id="datos-cuenta" hidden>
+            <div class="caja">
+              <div class="fila"><span>Banco</span><span>Bancolombia</span></div>
+              <div class="fila"><span>Cuenta de ahorros</span>
+                <span><span class="mono">556-559913-43</span><button class="copiar" type="button" data-copiar="55655991343">Copiar</button></span>
+              </div>
+              <div class="fila"><span>Valor exacto</span><span data-campo="saldo"></span></div>
+              <div class="fila"><span>Referencia</span>
+                <span><button class="copiar" type="button" data-copiar="referencia">Copiar</button></span>
+              </div>
+            </div>
+            <p class="nota">Escribe la referencia en la descripción de la transferencia y transfiere el valor exacto en un solo pago.</p>
+            <p class="nota">Al inscribir la cuenta, tu banco mostrará las iniciales A. M. M., correspondientes al recaudo de la fundación.</p>
+            <button id="btn-ya-pague" class="secundario" type="button">Ya transferí, subir comprobante</button>
+          </div>
+        </article>
       </section>
 
       <!-- Vista 3: comprobante -->
@@ -130,7 +207,7 @@
         <button id="btn-volver" class="secundario" type="button">Volver a los datos de pago</button>
       </section>
 
-      <!-- Vista 4: en verificación -->
+      <!-- Vista 4: en verificación (transferencia) -->
       <section id="vista-verificacion" hidden>
         <div class="centro">
           <div class="icono" style="background:var(--aviso-bg);color:var(--aviso)">◷</div>
@@ -146,7 +223,18 @@
           en esta misma página. No es necesario que vuelvas a transferir.</p>
       </section>
 
-      <!-- Vista 5: aprobado -->
+      <!-- Vista 5: pago en línea en proceso -->
+      <section id="vista-procesando" hidden>
+        <div class="centro">
+          <div class="spinner" aria-hidden="true"></div>
+          <h1 id="titulo-procesando">Confirmando tu pago</h1>
+          <p id="texto-procesando" class="sub">Esto toma unos segundos. No cierres esta página.</p>
+        </div>
+        <button id="btn-actualizar" class="boton" type="button" hidden>Actualizar estado</button>
+        <p id="error-procesando" class="error" role="alert"></p>
+      </section>
+
+      <!-- Vista 6: aprobado -->
       <section id="vista-aprobado" hidden>
         <div class="centro">
           <div class="icono" style="background:var(--ok-bg);color:var(--ok)">✓</div>
@@ -154,7 +242,8 @@
           <p class="sub">Tu saldo de matrícula del periodo <span data-campo="periodo"></span> quedó al día.</p>
         </div>
         <div class="fila"><span>Referencia</span><span class="mono" data-campo="referencia"></span></div>
-        <div class="fila"><span>Valor pagado</span><span data-campo="saldo"></span></div>
+        <div class="fila"><span>Método</span><span data-campo="metodo"></span></div>
+        <div class="fila"><span>Valor pagado</span><span data-campo="valorPagado"></span></div>
         <div class="fila"><span>Aprobado</span><span data-campo="fechaAprobacion"></span></div>
         <p class="pie">Fundación Néstor Sanín Cano</p>
       </section>
@@ -168,7 +257,9 @@
     API_URL: 'https://script.google.com/macros/s/AKfycbzp3az2P-xvsYSRBcBBAMu9d5ak_0pTSug7JP76QQUO3QehtpFhWwukl8XzJOOK1Uryhg/exec',
     PATRON: /^NESA-\d{6,10}-PR345154$/,
     TAMANO_MAX: 5 * 1024 * 1024,
-    TIPOS: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+    TIPOS: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
+    REINTENTOS_CONFIRMACION: 12,   // 12 × 5 s = 1 minuto
+    ESPERA_CONFIRMACION_MS: 5000
   };
 
   // Traducción de los códigos del backend a mensajes para el estudiante.
@@ -181,7 +272,10 @@
     TIPO_NO_PERMITIDO: 'El comprobante debe ser una imagen (JPG, PNG o WEBP) o un PDF.',
     ARCHIVO_GRANDE: 'El archivo supera 5 MB. Envía una imagen más liviana.',
     INTERNO: 'No pudimos completar la solicitud. Intenta de nuevo en unos minutos.',
-    RED: 'No hay conexión. Revisa tu internet e intenta de nuevo.'
+    RED: 'No hay conexión. Revisa tu internet e intenta de nuevo.',
+    RECHAZADA: 'El pago no fue aprobado por tu banco o entidad. Puedes intentarlo de nuevo o pagar por transferencia.',
+    SIN_WIDGET: 'No pudimos cargar el módulo de pago en línea. Recarga la página e intenta de nuevo.',
+    NO_DISPONIBLE: 'El pago en línea no está disponible en este momento. Puedes pagar por transferencia.'
   };
 
   const formatoPesos = new Intl.NumberFormat('es-CO', {
@@ -193,6 +287,14 @@
 
   let estudiante = null;
   const $ = (id) => document.getElementById(id);
+  const esperar = (ms) => new Promise((resolver) => setTimeout(resolver, ms));
+  const pesos = (valor) => `${formatoPesos.format(valor)} COP`;
+
+  // ── Comunicación con el backend ────────────────────────
+  async function api(parametros) {
+    const respuesta = await fetch(`${CONFIG.API_URL}?${new URLSearchParams(parametros)}`);
+    return respuesta.json();
+  }
 
   // ── Vistas ─────────────────────────────────────────────
   function mostrarVista(id) {
@@ -208,6 +310,8 @@
 
   // Llena cada elemento con data-campo usando textContent (evita XSS).
   function pintar(datos) {
+    const wompi = datos.wompi;
+    const pagoEnLinea = datos.metodoPago === 'Wompi';
     const valores = {
       nombre: datos.nombre,
       primerNombre: String(datos.nombre).split(' ')[0],
@@ -216,17 +320,23 @@
       periodo: datos.periodo,
       concepto: datos.concepto,
       referencia: datos.referencia,
-      saldo: `${formatoPesos.format(datos.saldo)} COP`,
+      saldo: pesos(datos.saldo),
+      comisionWompi: wompi ? pesos(wompi.comision) : '',
+      totalWompi: wompi ? pesos(wompi.total) : '',
+      metodo: pagoEnLinea ? 'Pago en línea' : 'Transferencia bancaria',
+      valorPagado: pesos(pagoEnLinea && datos.valorCobrado ? datos.valorCobrado : datos.saldo),
       fechaComprobante: fechaLegible(datos.fechaComprobante),
       fechaAprobacion: fechaLegible(datos.fechaAprobacion)
     };
     document.querySelectorAll('[data-campo]').forEach((elemento) => {
       elemento.textContent = valores[elemento.dataset.campo] ?? '';
     });
+    $('btn-wompi').textContent = wompi ? `Pagar ${formatoPesos.format(wompi.total)}` : 'Pagar en línea';
   }
 
   function mostrarSegunEstado(recienEnviado = false) {
     pintar(estudiante);
+    $('error-wompi').textContent = '';
     if (estudiante.estado === 'Pagado') {
       mostrarVista('vista-aprobado');
     } else if (estudiante.estado === 'En verificación') {
@@ -234,9 +344,24 @@
         ? 'Recibimos tu comprobante'
         : 'Tu pago está en verificación';
       mostrarVista('vista-verificacion');
+    } else if (estudiante.pagoEnProceso) {
+      mostrarProcesando(true);
     } else {
+      $('opcion-wompi').hidden = !estudiante.wompi;
       mostrarVista('vista-pago');
     }
+  }
+
+  // enEspera = true: el banco aún no confirma y el estudiante puede volver luego.
+  function mostrarProcesando(enEspera) {
+    $('titulo-procesando').textContent = enEspera ? 'Tu pago está en proceso' : 'Confirmando tu pago';
+    $('texto-procesando').textContent = enEspera
+      ? 'Tu banco aún no confirma la transacción. Cuando se apruebe, tu saldo quedará al día automáticamente. Puedes consultar el estado con tu referencia en esta misma página. No vuelvas a pagar.'
+      : 'Esto toma unos segundos. No cierres esta página.';
+    document.querySelector('#vista-procesando .spinner').hidden = enEspera;
+    $('btn-actualizar').hidden = !enEspera || !estudiante;
+    $('error-procesando').textContent = '';
+    mostrarVista('vista-procesando');
   }
 
   function ocupado(boton, ocupadoAhora, textoOcupado, textoNormal) {
@@ -257,8 +382,7 @@
     const boton = $('btn-consultar');
     ocupado(boton, true, 'Consultando…', 'Consultar');
     try {
-      const respuesta = await fetch(`${CONFIG.API_URL}?ref=${encodeURIComponent(ref)}`);
-      const datos = await respuesta.json();
+      const datos = await api({ ref });
       if (!datos.ok) {
         error.textContent = MENSAJES[datos.error] || MENSAJES.INTERNO;
         return;
@@ -270,6 +394,98 @@
     } finally {
       ocupado(boton, false, 'Consultando…', 'Consultar');
     }
+  }
+
+  async function actualizarEstado() {
+    const boton = $('btn-actualizar');
+    ocupado(boton, true, 'Actualizando…', 'Actualizar estado');
+    try {
+      const datos = await api({ ref: estudiante.referencia });
+      if (!datos.ok) {
+        $('error-procesando').textContent = MENSAJES[datos.error] || MENSAJES.INTERNO;
+        return;
+      }
+      estudiante = datos.estudiante;
+      mostrarSegunEstado();
+    } catch (err) {
+      $('error-procesando').textContent = MENSAJES.RED;
+    } finally {
+      ocupado(boton, false, 'Actualizando…', 'Actualizar estado');
+    }
+  }
+
+  // ── Pago en línea (Wompi) ──────────────────────────────
+  async function pagarEnLinea() {
+    const error = $('error-wompi');
+    error.textContent = '';
+    if (typeof WidgetCheckout === 'undefined') { error.textContent = MENSAJES.SIN_WIDGET; return; }
+
+    const boton = $('btn-wompi');
+    const textoNormal = boton.textContent;
+    ocupado(boton, true, 'Preparando pago…', textoNormal);
+    try {
+      // Datos frescos: estado actual y una referencia de Wompi nueva para este intento.
+      const datos = await api({ ref: estudiante.referencia });
+      if (!datos.ok) { error.textContent = MENSAJES[datos.error] || MENSAJES.INTERNO; return; }
+      estudiante = datos.estudiante;
+      if (estudiante.estado !== 'Pendiente' || estudiante.pagoEnProceso) { mostrarSegunEstado(); return; }
+      if (!estudiante.wompi) { error.textContent = MENSAJES.NO_DISPONIBLE; return; }
+
+      const w = estudiante.wompi;
+      const checkout = new WidgetCheckout({
+        currency: w.currency,
+        amountInCents: w.amountInCents,
+        reference: w.reference,
+        publicKey: w.publicKey,
+        signature: { integrity: w.signature },
+        redirectUrl: `${location.origin}${location.pathname}`
+      });
+      checkout.open((resultado) => {
+        const transaccion = resultado && resultado.transaction;
+        if (transaccion && transaccion.id) confirmarPago(transaccion.id);
+      });
+    } catch (err) {
+      error.textContent = MENSAJES.RED;
+    } finally {
+      ocupado(boton, false, 'Preparando pago…', textoNormal);
+    }
+  }
+
+  // Pregunta al backend (que a su vez verifica con Wompi) hasta tener respuesta final.
+  async function confirmarPago(txId) {
+    mostrarProcesando(false);
+    for (let intento = 0; intento < CONFIG.REINTENTOS_CONFIRMACION; intento++) {
+      try {
+        const datos = await api({ tx: txId });
+        if (!datos.ok) {
+          if (estudiante) { mostrarSegunEstado(); return; }
+          mostrarVista('vista-consulta');
+          $('error-consulta').textContent = MENSAJES[datos.error] || MENSAJES.INTERNO;
+          return;
+        }
+        estudiante = datos.estudiante;
+        if (datos.pago === 'APROBADA') { mostrarSegunEstado(); return; }
+        if (datos.pago === 'RECHAZADA') {
+          mostrarSegunEstado();
+          $('error-wompi').textContent = MENSAJES.RECHAZADA;
+          return;
+        }
+        if (datos.pago === 'REVISAR') { mostrarProcesando(true); return; }
+      } catch (err) {
+        // Sin conexión momentánea: se reintenta.
+      }
+      await esperar(CONFIG.ESPERA_CONFIRMACION_MS);
+    }
+    mostrarProcesando(true);
+  }
+
+  // Regreso desde el banco (PSE y otros): Wompi vuelve con ?id=TRANSACCION.
+  function revisarRetornoDeWompi() {
+    const parametros = new URLSearchParams(location.search);
+    const txId = parametros.get('id');
+    if (!txId) return;
+    history.replaceState(null, '', location.pathname);
+    confirmarPago(txId);
   }
 
   // ── Comprobante ────────────────────────────────────────
@@ -334,6 +550,8 @@
     caja.hidden = !caja.hidden;
     $('btn-ver-cuenta').textContent = caja.hidden ? 'Ver datos para transferir' : 'Ocultar datos para transferir';
   });
+  $('btn-wompi').addEventListener('click', pagarEnLinea);
+  $('btn-actualizar').addEventListener('click', actualizarEstado);
   $('btn-ya-pague').addEventListener('click', () => mostrarVista('vista-comprobante'));
   $('btn-volver').addEventListener('click', () => mostrarVista('vista-pago'));
   $('btn-enviar').addEventListener('click', enviarComprobante);
@@ -341,6 +559,8 @@
   document.addEventListener('click', (evento) => {
     if (evento.target.classList.contains('copiar')) copiar(evento.target);
   });
+
+  revisarRetornoDeWompi();
 </script>
 </body>
 </html>
