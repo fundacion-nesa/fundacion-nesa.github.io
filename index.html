@@ -167,6 +167,12 @@
     .copiar { flex: none; padding: 5px 10px; border: 1.5px solid var(--niebla); border-radius: 8px;
               background: #fff; font-size: 12.5px; font-weight: 700; color: var(--marca); cursor: pointer; }
     .copiar:hover { border-color: var(--marca); }
+    .aviso { margin-top: 28px; padding: 20px 18px; background: var(--papel);
+             border: 1.5px solid #E2B66B; border-radius: 14px; }
+    .aviso h2 { margin: 0 0 6px; }
+    .aviso p { margin: 0; font-size: 15px; color: var(--gris); }
+    .aviso strong { color: var(--tinta); font-weight: 700; }
+    .aviso .limite { margin-top: 12px; font-size: 14px; }
     .nota { font-size: 13px; color: var(--gris); line-height: 1.5; margin: 10px 0 0; }
 
     /* ── Comprobante ───────────────────────────────── */
@@ -252,7 +258,14 @@
       </div>
     </article>
 
-    <fieldset class="tarifas">
+    <div id="aviso-vencido" class="aviso" role="status" hidden>
+      <h2>El plazo de pago venció</h2>
+      <p>Ya no es posible pagar este saldo en línea. Comunícate con la fundación por sus canales
+        oficiales para recibir instrucciones.</p>
+      <p class="limite">Fecha límite: <strong data-campo="venceEn"></strong></p>
+    </div>
+
+    <fieldset id="bloque-pago" class="tarifas">
       <legend><h2>¿Cómo quieres pagar?</h2></legend>
       <p id="ayuda-metodos" class="ayuda">Elige una opción para ver los pasos.</p>
       <p id="error-ayuda" class="error" role="alert"></p>
@@ -374,7 +387,7 @@
   </section>
 </main>
 
-<footer class="pie-pagina">Fundación Néstor Sanín Cano. Copyright. Todos los derechos reservados.</footer>
+<footer class="pie-pagina">Fundación Néstor Sanín Cano. Si tienes dudas sobre tu saldo, escríbenos por nuestros canales oficiales.</footer>
 
 <script>
   // ── Configuración ──────────────────────────────────────
@@ -456,7 +469,8 @@
       metodo: pagoEnLinea ? 'Pago en línea' : 'Transferencia',
       valorPagadoNumero: numero(pagado),
       fechaComprobante: fechaLegible(datos.fechaComprobante),
-      fechaAprobacion: fechaLegible(datos.fechaAprobacion)
+      fechaAprobacion: fechaLegible(datos.fechaAprobacion),
+      venceEn: fechaLegible(datos.venceEn)
     };
     document.querySelectorAll('[data-campo]').forEach((elemento) => {
       elemento.textContent = valores[elemento.dataset.campo] ?? '';
@@ -481,7 +495,13 @@
       mostrarVista('vista-verificacion');
     } else if (estudiante.pagoEnProceso) {
       mostrarProcesando(true);
+    } else if (estudiante.plazoVencido) {
+      $('aviso-vencido').hidden = false;
+      $('bloque-pago').hidden = true;
+      mostrarVista('vista-pago');
     } else {
+      $('aviso-vencido').hidden = true;
+      $('bloque-pago').hidden = false;
       reiniciarMetodos();
       $('tarifa-wompi').hidden = !estudiante.wompi;
       $('tarifa-transferencia').hidden = !CONFIG.TRANSFERENCIA_ACTIVA;
@@ -570,7 +590,10 @@
       const datos = await api({ ref: estudiante.referencia });
       if (!datos.ok) { error.textContent = MENSAJES[datos.error] || MENSAJES.INTERNO; return; }
       estudiante = datos.estudiante;
-      if (estudiante.estado !== 'Pendiente' || estudiante.pagoEnProceso) { mostrarSegunEstado(); return; }
+      if (estudiante.estado !== 'Pendiente' || estudiante.pagoEnProceso || estudiante.plazoVencido) {
+        mostrarSegunEstado();
+        return;
+      }
       if (!estudiante.wompi) { error.textContent = MENSAJES.NO_DISPONIBLE; return; }
 
       const w = estudiante.wompi;
